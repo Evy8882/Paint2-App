@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: content: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">
+    <script src="cordova.js"></script>
+    <script src="components/loader.js"></script>
+    <link rel="stylesheet" href="components/loader.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script>
+    </script>
+</head>
+<body>
+	<h1>Paint 2</h1>
+    <hr>
+    <canvas id="drawCanvas" width="900" height="600"></canvas><hr>
+    Cor: 
+    <input type="color" name="" id="cor"><br>
+    Pincel: 
+    <input type="number" name="" id="width" value="5"><br>
+    <input type="checkbox" name="" id="borracha">Borracha <br>
+    <input type="button" value="Limpar" id="limpar">
+    <input type="button" id="salvar" value="Salvar">
+    <script>
+        const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+
+let drawing = false;
+
+ctx.strokeStyle = "#d695a0";
+ctx.lineWidth = 5;
+
+canvas.addEventListener("mousedown", (e)=>{
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+
+
+});
+
+canvas.addEventListener("mouseup",(e)=>{
+    drawing = false;
+    ctx.closePath();
+})
+canvas.addEventListener("mouseout",(e)=>{
+    drawing = false;
+    ctx.closePath();
+})
+
+canvas.addEventListener("mousemove", e =>{
+    if(drawing === true){
+        if (document.querySelector("#borracha:checked")){
+            ctx.clearRect(e.offsetX-(ctx.lineWidth/2),e.offsetY-(ctx.lineWidth/2), ctx.lineWidth, ctx.lineWidth)
+        }else{
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        }
+    }
+
+})
+
+document.querySelector("#salvar").addEventListener("click", e=>{
+    const imgData = canvas.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = imgData;
+    link.download = "image.png";
+    link.click();
+});
+
+
+document.querySelector("#cor").addEventListener("blur",(e)=>{
+    ctx.strokeStyle = e.target.value;
+})
+
+document.querySelector("#width").addEventListener("blur", e=>{
+    ctx.lineWidth = e.target.value;
+});
+
+document.querySelector("#limpar").addEventListener("click",()=>{
+    ctx.clearRect(0,0,900,600)
+})
+    </script>
+</body>
+</html>
