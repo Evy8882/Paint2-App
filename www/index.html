@@ -10,6 +10,24 @@
     <link rel="stylesheet" href="css/style.css">
     <script>
     </script>
+    <style>
+        *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    text-align: center;
+    color: rgb(214, 149, 160);
+    background-color: rgb(222, 233, 236);
+    overflow-x: none;
+}
+canvas{
+    border: 2px solid #d695a0;
+    background-color: white;
+    cursor: crosshair;
+}
+    </style>
 </head>
 <body>
 	<h1>Paint 2</h1>
@@ -38,8 +56,19 @@ canvas.addEventListener("mousedown", (e)=>{
 
 
 });
+canvas.addEventListener("touchstart", (e)=>{
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.offsetX, e.offsetY);
+
+
+});
 
 canvas.addEventListener("mouseup",(e)=>{
+    drawing = false;
+    ctx.closePath();
+})
+canvas.addEventListener("touchend",(e)=>{
     drawing = false;
     ctx.closePath();
 })
@@ -47,8 +76,23 @@ canvas.addEventListener("mouseout",(e)=>{
     drawing = false;
     ctx.closePath();
 })
+canvas.addEventListener("touchcancel",(e)=>{
+    drawing = false;
+    ctx.closePath();
+})
 
 canvas.addEventListener("mousemove", e =>{
+    if(drawing === true){
+        if (document.querySelector("#borracha:checked")){
+            ctx.clearRect(e.offsetX-(ctx.lineWidth/2),e.offsetY-(ctx.lineWidth/2), ctx.lineWidth, ctx.lineWidth)
+        }else{
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        }
+    }
+
+})
+canvas.addEventListener("touchmove", e =>{
     if(drawing === true){
         if (document.querySelector("#borracha:checked")){
             ctx.clearRect(e.offsetX-(ctx.lineWidth/2),e.offsetY-(ctx.lineWidth/2), ctx.lineWidth, ctx.lineWidth)
